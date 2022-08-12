@@ -36,7 +36,12 @@ while True:
         response = 'HTTP/1.0 200 OK\n\n'+ content
 
     except FileNotFoundError:
-        response = 'HTTP/1.0 404 NOT FOUND\n\nFile Not Found'
+
+        fin = open('htdocs/notFound.html')
+        content = fin.read()
+        fin.close()
+
+        response = 'HTTP/1.0 404 NOT FOUND\n\n'+ content
 
     # Send HTTP response    
     client_connection.sendall(response.encode())
