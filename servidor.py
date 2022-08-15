@@ -11,41 +11,44 @@ server_socket.bind((SERVER_HOST, SERVER_PORT))
 server_socket.listen(1)
 print('Listening on port %s ...' % SERVER_PORT)
 
-while True:    
-    # Wait for client connections
-    client_connection, client_address = server_socket.accept()
+try:
+    while True:    
+        # Wait for client connections
+        client_connection, client_address = server_socket.accept()
 
-    # Get the client request
-    request = client_connection.recv(1024).decode()
-    print(request)
+        # Get the client request
+        request = client_connection.recv(1024).decode()
+        print(request)
 
-    # Parse HTTP headers
-    headers = request.split('\n')
-    filename = headers[0].split()[1]
+        # Parse HTTP headers
+        headers = request.split('\n')
+        filename = headers[0].split()[1]
 
-    # Get the content of the file
-    if filename == '/':
-        filename = '/index.html'
-  
-    try:
-        fin = open('htdocs'+ filename)
-        content = fin.read()
-        fin.close()
+        # Get the content of the file
+        if filename == '/':
+            filename = '/index.html'
+    
+        try:
+            fin = open('htdocs'+ filename)
+            content = fin.read()
+            fin.close()
 
-        
-        response = 'HTTP/1.0 200 OK\n\n'+ content
+            
+            response = 'HTTP/1.0 200 OK\n\n'+ content
 
-    except FileNotFoundError:
+        except FileNotFoundError:
 
-        fin = open('htdocs/notFound.html')
-        content = fin.read()
-        fin.close()
+            fin = open('htdocs/notFound.html')
+            content = fin.read()
+            fin.close()
 
-        response = 'HTTP/1.0 404 NOT FOUND\n\n'+ content
+            response = 'HTTP/1.0 404 NOT FOUND\n\n'+ content
 
-    # Send HTTP response    
-    client_connection.sendall(response.encode())
-    client_connection.close()
+        # Send HTTP response    
+        client_connection.sendall(response.encode())
+        client_connection.close()
+
+except KeyboardInterrupt:
 
 # Close socket
-server_socket.close()
+    server_socket.close()
