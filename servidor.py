@@ -2,7 +2,7 @@ import socket
 
 # Define socket host and port
 SERVER_HOST = '0.0.0.0'
-SERVER_PORT = 8000
+SERVER_PORT = 8080
 
 # Create socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,10 +15,11 @@ try:
     while True:    
         # Wait for client connections
         client_connection, client_address = server_socket.accept()
-
+        
         # Get the client request
         request = client_connection.recv(1024).decode()
-        print(request)
+        # print(request)
+        print(f"Conexão de {client_address} foi estabelecida")
 
         # Parse HTTP headers
         headers = request.split('\n')
@@ -34,7 +35,7 @@ try:
             fin.close()
 
             
-            response = 'HTTP/1.0 200 OK\n\n'+ content
+            response = 'HTTP/1.1 200 OK\n\n'+ content
 
         except FileNotFoundError:
 
@@ -42,7 +43,7 @@ try:
             content = fin.read()
             fin.close()
 
-            response = 'HTTP/1.0 404 NOT FOUND\n\n'+ content
+            response = 'HTTP/1.1 404 NOT FOUND\n\n'+ content
 
         # Send HTTP response    
         client_connection.sendall(response.encode())
