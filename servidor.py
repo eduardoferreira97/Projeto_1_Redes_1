@@ -6,12 +6,13 @@ SERVER_PORT = 8080
 
 # Cria o socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# Defina o valor da opção de soquete fornecida
+# Defina o valor da opção de socket fornecida
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 # Liga o socket ao endereço
 server_socket.bind((SERVER_HOST, SERVER_PORT))
 # Habilita o servidor aceite conexões
 server_socket.listen(1)
+
 print('Acessando a porta %s ...' % SERVER_PORT)
 
 try:
@@ -27,7 +28,6 @@ try:
         # Analisa o cabeçalho de solicitação HTTP 
         headers = request.split('\n')
         filename = headers[0].split()[1]
-
         
         if filename == '/':
             filename = '/index.html'
@@ -38,7 +38,7 @@ try:
             content = fin.read()
             fin.close()
 
-            
+            # Resposta do servidor para o cliente
             response = 'HTTP/1.1 200 OK\n\n'+ content
 
         except FileNotFoundError:
@@ -46,15 +46,16 @@ try:
             fin = open('htdocs/notFound.html')
             content = fin.read()
             fin.close()
-
+            
+            # Resposta do servidor para o cliente
             response = 'HTTP/1.1 404 NOT FOUND\n\n'+ content
 
-        # Envia a resposta do HTTP para o socket   
+        # Envia a resposta para o socket  
         client_connection.sendall(response.encode())
-        # ermina a conexão do cliente com o socket
-        client_connection.close()
+        
 
 except KeyboardInterrupt:
-
-# Fecha o socket
+    # Termina a conexão do cliente com o socket
+    client_connection.close()
+    # Fecha o socket
     server_socket.close()
