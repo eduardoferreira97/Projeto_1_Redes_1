@@ -4,33 +4,37 @@ import socket
 SERVER_HOST = '0.0.0.0'
 SERVER_PORT = 8080
 
-# Create socket
+# Cria o socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Defina o valor da opção de soquete fornecida
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+# Liga o socket ao endereço
 server_socket.bind((SERVER_HOST, SERVER_PORT))
-server_socket.listen(5)
-print('Listening on port %s ...' % SERVER_PORT)
+# Habilita o servidor aceite conexões
+server_socket.listen(1)
+print('Acessando a porta %s ...' % SERVER_PORT)
 
 try:
     while True:    
-        # Wait for client connections
+        # Espera pela conecxão do cliente
         client_connection, client_address = server_socket.accept()
         
-        # Get the client request
+        # Recebe a solicitação do cliente
         request = client_connection.recv(1024).decode()
         # print(request)
-        print(f"Conexão de {client_address} foi estabelecida")
+        print(f"Conexão {client_address} estabelecida")
 
-        # Parse HTTP headers
+        # Analisa o cabeçalho de solicitação HTTP 
         headers = request.split('\n')
         filename = headers[0].split()[1]
 
-        # Get the content of the file
+        
         if filename == '/':
             filename = '/index.html'
     
         try:
-            fin = open('htdocs'+ filename, encoding="utf8", errors='ignore')
+            # Pega o conteudo do arquivo
+            fin = open('htdocs'+ filename)
             content = fin.read()
             fin.close()
 
@@ -45,11 +49,12 @@ try:
 
             response = 'HTTP/1.1 404 NOT FOUND\n\n'+ content
 
-        # Send HTTP response    
+        # Envia a resposta do HTTP para o socket   
         client_connection.sendall(response.encode())
+        # ermina a conexão do cliente com o socket
         client_connection.close()
 
 except KeyboardInterrupt:
 
-# Close socket
+# Fecha o socket
     server_socket.close()
