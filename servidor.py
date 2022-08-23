@@ -1,17 +1,20 @@
 import socket
 
+
+
 # Define a porta e o host do socket
 SERVER_HOST = '0.0.0.0'
 SERVER_PORT = 8080
 
 # Cria o socket
+# F_INET (família de endereço IPV4) e SOCK_STREAM (TCP)
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Defina o valor da opção de socket fornecida
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 # Liga o socket ao endereço
 server_socket.bind((SERVER_HOST, SERVER_PORT))
-# Habilita o servidor aceite conexões
-server_socket.listen(1)
+# Habilita que o servidor aceite conexões
+server_socket.listen(10)
 
 print('Acessando a porta %s ...' % SERVER_PORT)
 
@@ -21,7 +24,8 @@ try:
         client_connection, client_address = server_socket.accept()
         
         # Recebe a solicitação do cliente
-        request = client_connection.recv(1024).decode()
+        # recv() recebe as mensagens através do socket
+        request = client_connection.recv(100000).decode()
         # print(request)
         print(f"Conexão {client_address} estabelecida")
 
@@ -34,21 +38,26 @@ try:
     
         try:
             # Pega o conteudo do arquivo
-            fin = open('htdocs'+ filename)
-            content = fin.read()
+            # with open('htdocs'+filename, encoding='utf-8') as f:
+            #     content = f.read()
+                # f.close()
+
+            fin = open('htdocs'+ filename, 'rb')
+            content = fin.read().decode('ISO-8859-1')
             fin.close()
 
-            # Resposta do servidor para o cliente
-            response = 'HTTP/1.1 200 OK\n\n'+ content
+            # Resposta
+            response = ('HTTP/1.1 200 OK\r\n' + 'Content-Type: text/html\r\n' + 'Content-Length: ' + str(len(content)) + '\r\n\r\n' + (content))
 
         except FileNotFoundError:
 
             fin = open('htdocs/notFound.html')
             content = fin.read()
             fin.close()
-            
-            # Resposta do servidor para o cliente
-            response = 'HTTP/1.1 404 NOT FOUND\n\n'+ content
+
+            # Resposta
+            response = ('HTTP/1.1 404 NOT FOUND\n\n'+ 'Content-Type: text/html\r\n' + 'Content-Length: ' + str(len(content)) + '\r\n\r\n' + (content))
+
 
         # Envia a resposta para o socket  
         client_connection.sendall(response.encode())

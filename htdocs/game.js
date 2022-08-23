@@ -1,74 +1,4 @@
-<html>
-	<head>
-		<meta charset="utf8">
-		<title>Pac-Man</title>
-		<link rel="shortcut icon" href="favicon.png">
-		<style>
-			*{padding:0;margin:0;}
-			.wrapper{
-				width: 960px;
-				margin:0 auto;
-				color:#999;
-			}
-			canvas{display:block;background: #000;}
-			.mod-game .info{
-				padding: 10px 0;
-				margin-bottom: 5px;
-				line-height: 20px;
-				text-align: center;
-				color: #666;
-			}
-			.mod-game .info p{
-				line-height: 20px;
-				font-size: 14px;
-				color: #666;
-			}
-			.mod-game .intro{
-				padding: 10px 15px;
-				background: #f8f8f8;
-				border-radius: 5px;
-			}
-			.mod-game .intro p{
-				line-height: 22px;
-				text-indent: 2em;
-				font-size: 14px;
-				color: #666;
-			}
-			.mod-button{
-				height: 32px;
-				padding: 15px 0;
-				text-align: center;
-			}
-			.mod-button span,.mod-button a{
-				vertical-align: middle;
-			}
-			.mod-button .btn{
-				display: inline-block;
-				padding: 0 12px;
-				line-height: 26px;
-				color: #24292f;
-				border: 1px solid #dddede;
-				text-decoration: none;
-				font-size: 13px;
-				color: #24292f;
-				border-radius: 2px;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="wrapper">
-			<div class="mod-game">
-				<canvas id="canvas" width="960" height="640"></canvas>
-				<div class="info">
-					
-					<p>Pressione [espaço] para pausar ou continuar</p>
-				</div>
-				
-			</div>
-			<div class="mod-button">
-		</div>
-		<script>
-			'use strict';
+'use strict';
 /*!
  * Pacman - HTML5 Game
  * https://passer-by.com/pacman/
@@ -480,10 +410,3 @@ function Game(id,params){
         this.start();
     };
 }
-
-		</script>
-		<!-- <script src="game.js"></script> -->
-		<script src="index.js"></script>
-		
-	</body>
-</html>
